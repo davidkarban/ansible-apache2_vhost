@@ -1,0 +1,47 @@
+---
+# tasks file for apache2_vhost
+- name: Load the OS specific variables
+  tags: 
+    - apache
+    - php
+    - vhosts
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Get apache version
+  tags:
+    - apache
+    - php
+    - vhosts
+  always_run: true
+  changed_when: false
+  shell: '{{ apache_service | quote }} -v | grep version | sed -e "s/Server version.\{1\} Apache\/\([0-9]\)\.\([0-9]\)\.\([0-9]\{1,3\}\).*/\1.\2/g"'
+  register: apache_version
+
+- name: Ensure directory for website do exists
+  tags: 
+    - apache
+    - vhosts
+  file: path={{ item.document_root|default(apache_vhosts_base_dir + item.domain + "/www/") }} state=directory owner={{ item.owner|default(apache_vhosts_owner) }} group={{ item.group|default(apache_vhosts_group) }}
+  with_items: vhosts
+  when: 
+    - item.php_fpm is defined
+    - item.owner != apache_vhosts_owner 
+
+- name: Load vhosts configuration files
+  tags: 
+    - apache
+    - vhosts
+  template: src=vhost.conf.j2 dest={{ apache_vhosts_conf_dir }}/{{ item.domain + '.conf' }}
+  with_items: vhosts
+  when: item.ssl is not defined
+  notify: reload apache
+
+- name: Load vhosts-ssl configuration files
+  tags: 
+    - apache
+    - vhosts
+  template: src=vhost.conf.j2 dest={{ apache_vhosts_conf_dir }}/{{ item.domain + '-ssl.conf' }}
+  with_items: vhosts
+  when: item.ssl is defined
+  notify: reload apache
+

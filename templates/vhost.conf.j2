@@ -12,6 +12,10 @@
         SSLCertificateKeyFile /etc/ssl/private/{{ item.domain }}.key
         SSLCertificateChainFile /etc/ssl/certs/{{ item.domain}}-bundle.crt
 
+	{% if apache2_sts %}
+	Header always set Strict-Transport-Security "max-age={{ apache2_sts_max_age }}; {% if apache2_sts_subdomains %}includeSubDomains{% endif %}"
+	{% endif %}
+
 	SSLCipherSuite AES256+EECDH:AES256+EDH
 	SSLProtocol All -SSLv2 -SSLv3
 	SSLHonorCipherOrder On

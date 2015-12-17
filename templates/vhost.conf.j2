@@ -4,13 +4,13 @@
 	ServerName {{ item.domain }}
 	{% if item.server_alias is defined %}ServerAlias {% for i in item.server_alias %}{{ i + ' ' }}{% endfor %}{% endif %}
 
-	DocumentRoot {{ item.document_root|default(apache_vhosts_base_dir + '/' + item.owner + '/' + 'www') }}
+	DocumentRoot {{ item.document_root|default(apache_vhosts_base_dir + '/' + item.domain + '/' + 'www') }}
 
 {% if item.ssl is defined %}
 	SSLEngine on
-	SSLCertificateFile    /etc/ssl/certs/{{ item.domain }}.crt
-        SSLCertificateKeyFile /etc/ssl/private/{{ item.domain }}.key
-        SSLCertificateChainFile /etc/ssl/certs/{{ item.domain}}-bundle.crt
+        SSLCertificateFile    {{ item.tls_cert_file|default(apache2_default_tls_cert_file) }}
+        SSLCertificateKeyFile {{ item.tls_key_file|default(apache2_default_tls_key_file) }}
+        SSLCertificateChainFile {{ item.tls_bundle_file|default(false) }}
 
 	{% if apache2_sts %}
 	Header always set Strict-Transport-Security "max-age={{ apache2_sts_max_age }}; {% if apache2_sts_subdomains %}includeSubDomains{% endif %}"
@@ -21,15 +21,15 @@
 	SSLHonorCipherOrder On
 {% endif %}
 {% if item.php_fpm|default(false) %}{% if ansible_distribution == "Debian" %}
-	FastCgiExternalServer {{ item.document_root|default(apache_vhosts_base_dir + '/' + item.owner + '/' + 'www') }}/index.php -host {{ item.php_fpm.address }}
+	FastCgiExternalServer {{ item.document_root|default(apache_vhosts_base_dir + '/' + item.domain + '/' + 'www') }}/index.php -host {{ item.php_fpm.address }}
 {% else %}
-	ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://{{ item.php_fpm.address + item.document_root|default(apache_vhosts_base_dir + '/' + item.owner + '/' + 'www') }}/$1 connectiontimeout=5 timeout=300
+	ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://{{ item.php_fpm.address + item.document_root|default(apache_vhosts_base_dir + '/' + item.domain + '/' + 'www') }}/$1 connectiontimeout=5 timeout=300
 {% endif %}{% endif %}
 {% if item.redirect is defined %}
 	Redirect {{ item.redirect.type|default(302) }} {{ item.redirect.from }} {{ item.redirect.to }}
 {% endif %}
 
-{% if item.directory|default(true) %}	<Directory {{ item.document_root|default(apache_vhosts_base_dir + '/' + item.owner + '/' + 'www') }}>
+{% if item.directory|default(true) %}	<Directory {{ item.document_root|default(apache_vhosts_base_dir + '/' + item.domain + '/' + 'www') }}>
 {% if ansible_distribution == "Debian" %}
 		AddType application/x-httpd-fastphp5 .php
 		Action application/x-httpd-fastphp5 /index.php

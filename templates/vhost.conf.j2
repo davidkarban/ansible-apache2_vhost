@@ -10,7 +10,7 @@
 	SSLEngine on
         SSLCertificateFile    {{ item.tls_cert_file|default(apache2_default_tls_cert_file) }}
         SSLCertificateKeyFile {{ item.tls_key_file|default(apache2_default_tls_key_file) }}
-        SSLCertificateChainFile {{ item.tls_bundle_file|default(false) }}
+        {% if item.tls_bundle_file is defined %}SSLCertificateChainFile {{ item.tls_bundle_file }}{% endif %}
 
 	{% if apache2_sts %}
 	Header always set Strict-Transport-Security "max-age={{ apache2_sts_max_age }}; {% if apache2_sts_subdomains %}includeSubDomains{% endif %}"

@@ -31,7 +31,7 @@
   tags: 
     - apache
     - vhosts
-  template: src=vhost.conf.j2 dest={{ apache_vhosts_conf_dir }}/{{ item.domain + '.conf' }}
+  template: src=vhost.conf.j2 dest={{ apache_vhosts_conf_dir }}/{{ item.domain + '.conf' }} backup=yes
   with_items: vhosts
   when: item.ssl is not defined
   notify: reload apache
@@ -40,7 +40,7 @@
   tags: 
     - apache
     - vhosts
-  template: src=vhost.conf.j2 dest={{ apache_vhosts_conf_dir }}/{{ item.domain + '-ssl.conf' }}
+  template: src=vhost.conf.j2 dest={{ apache_vhosts_conf_dir }}/{{ item.domain + '-ssl.conf' }} backup=yes
   with_items: vhosts
   when: item.ssl is defined
   notify: reload apache

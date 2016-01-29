@@ -30,7 +30,7 @@
 {% endif %}
 
 {% if item.directory|default(true) %}	<Directory {{ item.document_root|default(apache_vhosts_base_dir + '/' + item.domain + '/' + 'www') }}>
-{% if ansible_distribution == "Debian" %}
+{% if item.php_fpm|default(false) and ansible_distribution == "Debian" %}
 		AddType application/x-httpd-fastphp5 .php
 		Action application/x-httpd-fastphp5 /index.php
 

@@ -20,6 +20,9 @@
 	SSLProtocol All -SSLv2 -SSLv3
 	SSLHonorCipherOrder On
 {% endif %}
+{% if item.php|default(false) %}{% for option in item.php %}
+{{	'php_admin_' + option.type + ' ' + option.name + ' ' + option.value }}
+{% endfor %}{% endif %}
 {% if item.php_fpm|default(false) %}{% if ansible_distribution == "Debian" %}
 	FastCgiExternalServer {{ item.document_root|default(apache_vhosts_base_dir + '/' + item.domain + '/' + 'www') }}/index.php -host {{ item.php_fpm.address }}
 {% else %}

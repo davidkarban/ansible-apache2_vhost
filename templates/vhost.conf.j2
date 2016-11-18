@@ -27,6 +27,7 @@
 {% endfor %}
 	</IfModule>
 {% endif %}
+
 {% if item.redirect is defined %}
 	Redirect {{ item.redirect.type|default(302) }} {{ item.redirect.from }} {{ item.redirect.to }}
 {% endif %}

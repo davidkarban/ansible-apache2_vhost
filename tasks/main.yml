@@ -33,7 +33,7 @@
     - vhosts
   template: src=vhost.conf.j2 dest={{ apache_vhosts_conf_dir }}/{{ item.config_filename|default(item.domain + '.conf') }} backup=yes
   with_items: vhosts
-  when: item.ssl is not defined
+  when: not item.ssl|default(true)
   notify: reload apache
 
 - name: Load vhosts-ssl configuration files
@@ -42,6 +42,6 @@
     - vhosts
   template: src=vhost.conf.j2 dest={{ apache_vhosts_conf_dir }}/{{ item.config_filename|default(item.domain + '-ssl.conf') }} backup=yes
   with_items: vhosts
-  when: item.ssl is defined
+  when: item.ssl|default(true)
   notify: reload apache
 

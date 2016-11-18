@@ -3,3 +3,6 @@ apache_vhosts_conf_dir: "/etc/httpd/vhosts.d"
 apache_vhosts_owner: "apache"
 apache_vhosts_group: "apache"
 
+apache2_default_tls_cert_file: "/etc/pki/tls/certs/localhost.crt"
+apache2_default_tls_key_file: "/etc/pki/tls/private/localhost.key"
+apache2_default_tls_bundle_file: false

@@ -22,7 +22,7 @@
     - apache
     - vhosts
   file: path={{ item.document_root|default(apache_vhosts_base_dir + item.domain + "/www/") }} state=directory owner={{ item.owner|default(apache_vhosts_owner) }} group={{ item.group|default(apache_vhosts_group) }}
-  with_items: vhosts
+  with_items: '{{ vhosts }}'
   when: 
     - item.php_fpm is defined
     - item.owner != apache_vhosts_owner 
@@ -32,7 +32,7 @@
     - apache
     - vhosts
   template: src=vhost.conf.j2 dest={{ apache_vhosts_conf_dir }}/{{ item.config_filename|default(item.domain + '.conf') }} backup=yes
-  with_items: vhosts
+  with_items: '{{ vhosts }}'
   when: not item.ssl|default(true)
   notify: reload apache
 
@@ -41,7 +41,7 @@
     - apache
     - vhosts
   template: src=vhost.conf.j2 dest={{ apache_vhosts_conf_dir }}/{{ item.config_filename|default(item.domain + '-ssl.conf') }} backup=yes
-  with_items: vhosts
+  with_items: '{{ vhosts }}'
   when: item.ssl|default(true)
   notify: reload apache
 

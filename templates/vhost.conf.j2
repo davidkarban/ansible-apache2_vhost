@@ -4,7 +4,7 @@
 	ServerName {{ item.domain }}
 	{% if item.server_alias is defined %}ServerAlias {% for i in item.server_alias %}{{ i + ' ' }}{% endfor %}{% endif %}
 
-	DocumentRoot {{ item.document_root|default(apache_vhosts_base_dir + '/' + item.domain + '/' + 'www') }}
+	DocumentRoot {{ item.document_root|default(apache_vhosts_base_dir + '/' + item.domain + '/' + apache2_vhost_public_dir) }}
 
 {% if item.ssl|default(true) %}
 	SSLEngine on
@@ -32,7 +32,7 @@
 	Redirect {{ item.redirect.type|default(302) }} {{ item.redirect.from }} {{ item.redirect.to }}
 {% endif %}
 
-{% if item.directory|default(true) %}	<Directory {{ item.document_root|default(apache_vhosts_base_dir + '/' + item.domain + '/' + 'www') }}>
+{% if item.directory|default(true) %}	<Directory {{ item.document_root|default(apache_vhosts_base_dir + '/' + item.domain + '/' + apache2_vhost_public_dir) }}>
 {% if item.php_fpm|default(false) and ansible_distribution == "Debian" %}
 		AddType application/x-httpd-fastphp5 .php
 		Action application/x-httpd-fastphp5 /index.php
@@ -54,9 +54,9 @@
 {% endif %}
 
 {% if item.php_fpm|default(false) %}{% if ansible_distribution == "Debian" %}
-	FastCgiExternalServer {{ item.document_root|default(apache_vhosts_base_dir + '/' + item.domain + '/' + 'www') }}/index.php -host {{ item.php_fpm.address }}
+	FastCgiExternalServer {{ item.document_root|default(apache_vhosts_base_dir + '/' + item.domain + '/' + apache2_vhost_public_dir) }}/index.php -host {{ item.php_fpm.address }}
 {% else %}
-	ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://{{ item.php_fpm.address + item.document_root|default(apache_vhosts_base_dir + '/' + item.domain + '/' + 'www') }}/$1 connectiontimeout=5 timeout=300
+	ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://{{ item.php_fpm.address + item.document_root|default(apache_vhosts_base_dir + '/' + item.domain + '/' + apache2_vhost_public_dir) }}/$1 connectiontimeout=5 timeout=300
 {% endif %}	SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1{% endif %}
 
 </VirtualHost>

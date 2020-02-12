@@ -26,6 +26,7 @@
   when: 
     - item.php_fpm is defined
     - item.owner != apache_vhosts_owner 
+    - apache2_vhost_create_document_root
 
 - name: Load vhosts configuration files
   tags: 

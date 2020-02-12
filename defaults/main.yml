@@ -8,3 +8,10 @@ apache_ssl_port: 443
 
 apache_vhosts_base_dir: "{% if ansible_os_family == 'Debian' %}/var/www{% else %}/var/www/html{% endif %}"
 
+# Directory that will hold publicly available data (usually public/public_html/www).
+# Default: www
+apache2_vhost_public_dir: "{{ __apache2_vhost_public_dir }}"
+
+# Should the role also create document root?
+# Default: true
+apache2_vhost_create_document_root: "{{ __apache2_vhost_create_document_root }}"

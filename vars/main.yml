@@ -1,2 +1,5 @@
 ---
 # vars file for apache2_vhost
+
+__apache2_vhost_public_dir: "www"
+__apache2_vhost_create_document_root: true

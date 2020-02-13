@@ -12,8 +12,7 @@
 - name: Get apache subversion
   check_mode: false
   changed_when: false
-  shell: '{{ apache_service | quote }} -v | grep version | sed -e "s/Server version.\{1\} Apache\/\([0-9]\)\.\([0-9]\)\.\([0-9]\{1,3\}\).*/\
-3/g"'
+  shell: '{{ apache_service | quote }} -v | grep version | sed -e "s/Server version.\{1\} Apache\/\([0-9]\)\.\([0-9]\)\.\([0-9]\{1,3\}\).*/\3/g"'
   register: apache_subversion
 
 - name: Ensure directory for website do exists

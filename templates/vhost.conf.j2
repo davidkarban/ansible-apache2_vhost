@@ -8,8 +8,8 @@
 
 {% if item.ssl|default(true) %}
 	SSLEngine on
-        SSLCertificateFile    {{ item.tls_cert_file|default(apache2_default_tls_cert_file) }}
-        SSLCertificateKeyFile {{ item.tls_key_file|default(apache2_default_tls_key_file) }}
+        SSLCertificateFile    {{ item.tls_cert_file|default(__apache2_tls_cert_file) }}
+        SSLCertificateKeyFile {{ item.tls_key_file|default(__apache2_tls_key_file) }}
         {% if item.tls_bundle_file is defined %}SSLCertificateChainFile {{ item.tls_bundle_file }}{% endif %}
 
 	{% if apache_version.stdout == '2.4' and apache_subversion.stdout|int >= 17 %}Protocols h2 http/1.1

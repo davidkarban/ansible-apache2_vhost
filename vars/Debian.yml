@@ -3,3 +3,7 @@ apache_vhosts_conf_dir: "/etc/apache2/sites-enabled"
 apache_vhosts_owner: "www-data"
 apache_vhosts_group: "www-data"
 
+__apache2_tls_cert_file: "/etc/ssl/certs/ssl-cert-snakeoil.pem"
+__apache2_tls_key_file: "/etc/ssl/private/ssl-cert-snakeoil.key"
+__apache2_tls_bundle_file: false
+

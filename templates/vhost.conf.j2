@@ -19,6 +19,11 @@
 	{% endif %}
 
 {% endif %}
+{% if item.headers|default(false) %}
+{% for header in item.headers %}
+	Header	always set {{ header.name }} "{{ header.value }}"
+{% endfor %}
+{% endif %}
 {% if item.php|default(false) %}
 	<IfModule php5>
 {% for option in item.php %}

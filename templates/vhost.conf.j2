@@ -23,9 +23,10 @@
 {% for header in item.headers %}
 	Header	always set {{ header.name }} "{{ header.value }}"
 {% endfor %}
+
 {% endif %}
 {% if item.locations|default(false) %}{% for location in item.locations %}
-	<Location location.path>
+	<Location {{ location.path }}>
 {% for location_settings in location.settings %}
 		{{ location_settings }}
 {% endfor %}

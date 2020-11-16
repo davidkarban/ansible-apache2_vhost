@@ -24,14 +24,13 @@
 	Header	always set {{ header.name }} "{{ header.value }}"
 {% endfor %}
 {% endif %}
-{% if item.locations|default(false) %}
-	<Location item.locations.path>
-{% for location in item.locations.settings %}
-		{{ location }}
+{% if item.locations|default(false) %}{% for location in item.locations %}
+	<Location location.path>
+{% for location_settings in location.settings %}
+		{{ location_settings }}
 {% endfor %}
 	</Location>
-{% endfor %}
-{% endif %}
+{% endfor %}{% endif %}
 {% if item.php|default(false) %}
 	<IfModule php5>
 {% for option in item.php %}
